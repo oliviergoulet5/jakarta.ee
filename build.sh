@@ -32,11 +32,20 @@ rm -rf /tmp/specifications
 echo -e "Current working directory: $PWD\n"
 
 echo -e "Step 5: Preparing to move html files to static folder..."
+LANGS=(zh)
 for f in specifications/*/*/*.html; do
   if [ -f "$f" ]; then
+    ## Default locale 
     echo -e  "Moving $f to `dirname ../static/$f`"
     mkdir -p `dirname ../static/$f`
-    mv -f "$f" "../static/$f"
+    cp "$f" "../static/$f"
+    
+    ## Other locales
+    for LANG in ${LANGS[@]}; do
+      echo -e "Copying $f to `dirname ../static/$LANG/$f`"
+      mkdir -p `dirname ../static/$LANG/$f`
+      cp "$f" `../static/$LANG/$f`
+    done
   fi
 done
 
@@ -50,7 +59,6 @@ for f in specifications/*/*/*/; do
 done
 
 echo -e "Step 7: Create missing language copies..."
-LANGS=(zh)
 FILES=`find ./specifications -type f -name "*.md"`
 for F in $FILES; do
   if [ -f "$F" ]; then
